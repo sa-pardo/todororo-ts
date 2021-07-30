@@ -1,0 +1,21 @@
+.text-strike::before {
+  content: "";
+  animation: strike 0.3s ease;
+  @apply absolute h-0.5 top-1/2 w-full bg-black;
+}
+
+.text-unstrike::before {
+  content: "";
+  animation: strike 0.2s ease forwards reverse;
+  animation-direction: reverse;
+  @apply absolute h-0.5 top-1/2 w-full bg-black;
+}
+
+@keyframes strike {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
