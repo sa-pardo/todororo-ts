@@ -1,0 +1,14 @@
+.spin-in {
+  animation: spin-one 300ms ease;
+}
+
+@keyframes spin-one {
+  from {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+}
