@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ITask } from "./components/Task";
 import TaskList from "./components/TaskList";
+import rectangle from "./assets/Rectangle.png";
+import Pomodoro from "./components/Pomodoro";
 
 const testTasks: ITask[] = [
   { title: "this is just a sample task", isDone: false },
@@ -32,14 +34,20 @@ function App() {
   };
 
   return (
-    <div className="">
-      <TaskList
+    <div className="App h-screen w-1/2 flex justify-center items-center">
+      <img
+        src={rectangle}
+        alt="site background"
+        className="absolute left-0 top-0 h-screen w-1/2 z-[-10]"
+      />
+      {/* <TaskList
         tasks={tasks}
         toggleCompletedTask={toggleCompletedTask}
         deleteTask={deleteTask}
         selectTask={selectTask}
         addTask={addTask}
-      />
+      /> */}
+      <Pomodoro selectedTask={testTasks[0]} />
     </div>
   );
 }
