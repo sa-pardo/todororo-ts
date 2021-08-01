@@ -34,20 +34,24 @@ function App() {
   };
 
   return (
-    <div className="App h-screen w-1/2 flex justify-center items-center">
+    <div className="App h-screen w-screen flex justify-center items-center">
       <img
         src={rectangle}
         alt="site background"
-        className="absolute left-0 top-0 h-screen w-1/2 z-[-10]"
+        className="absolute left-0 top-0 h-screen w-1/2 block z-[-10]"
       />
-      {/* <TaskList
-        tasks={tasks}
-        toggleCompletedTask={toggleCompletedTask}
-        deleteTask={deleteTask}
-        selectTask={selectTask}
-        addTask={addTask}
-      /> */}
-      <Pomodoro selectedTask={testTasks[0]} />
+      <div className="w-1/2 h-screen flex items-center justify-center">
+        <Pomodoro selectedTask={testTasks[0]} />
+      </div>
+      <div className="w-1/2 h-screen flex items-center justify-center">
+        <TaskList
+          tasks={tasks}
+          toggleCompletedTask={toggleCompletedTask}
+          deleteTask={deleteTask}
+          selectTask={selectTask}
+          addTask={addTask}
+        />
+      </div>
     </div>
   );
 }
