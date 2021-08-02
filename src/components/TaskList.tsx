@@ -28,7 +28,7 @@ function TaskList({
   addTask,
 }: Props): ReactElement {
   return (
-    <div>
+    <div className="w-full md:max-w-[80%]">
       <h2 className="font-semibold text-3xl mb-4">To-Do List</h2>
       <TaskInput addTask={addTask} />
       {tasks.sort(compareByBooleans).map((task) => (

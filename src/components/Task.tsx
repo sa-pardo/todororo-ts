@@ -46,7 +46,7 @@ function Task({
           } ${hover ? "text-red-500" : "text-blue-500"}`}
         />
       </div>
-      <div className="w-full flex justify-between">
+      <div className="w-full overflow-hidden flex justify-between">
         <div
           onClick={() => selectTask(task)}
           onKeyPress={() => selectTask(task)}

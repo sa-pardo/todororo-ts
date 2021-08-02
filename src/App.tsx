@@ -3,6 +3,7 @@ import { ITask } from "./components/Task";
 import TaskList from "./components/TaskList";
 import rectangle from "./assets/Rectangle.png";
 import Pomodoro from "./components/Pomodoro";
+import useMediaQuery from "./hooks/MediaQuery";
 
 const testTasks: ITask[] = [
   { title: "this is just a sample task", isDone: false },
@@ -11,6 +12,7 @@ const testTasks: ITask[] = [
 ];
 function App() {
   const [tasks, setTasks] = useState(testTasks);
+  const mediaQuery = useMediaQuery("(min-width: 768px)");
 
   const toggleCompletedTask = (task: ITask): void => {
     const updatedTasks = tasks.map((current) =>
@@ -34,16 +36,20 @@ function App() {
   };
 
   return (
-    <div className="App h-screen w-screen flex justify-center items-center">
-      <img
-        src={rectangle}
-        alt="site background"
-        className="absolute left-0 top-0 h-screen w-1/2 block z-[-10]"
-      />
-      <div className="w-1/2 h-screen flex items-center justify-center">
+    <div className="App h-screen w-screen md:flex justify-center items-center p-2">
+      {mediaQuery ? (
+        <img
+          src={rectangle}
+          alt="site background"
+          className="absolute left-0 top-0 h-screen w-1/2 z-[-10]"
+        />
+      ) : (
+        <div className="absolute left-0 top-0 h-screen w-full bg-[#e45858] z-[-10]" />
+      )}
+      <div className="w-full md:w-1/2 h-screen flex items-center justify-center">
         <Pomodoro selectedTask={testTasks[0]} />
       </div>
-      <div className="w-1/2 h-screen flex items-center justify-center">
+      <div className="w-full md:w-1/2 h-screen flex md:items-center justify-center pt-4">
         <TaskList
           tasks={tasks}
           toggleCompletedTask={toggleCompletedTask}
