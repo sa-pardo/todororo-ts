@@ -20,7 +20,7 @@ const formatTime = (time: number): string => {
 };
 
 function Pomodoro({ selectedTask }: Props): ReactElement {
-  const [time, setTime] = useState(1501);
+  const [time, setTime] = useState(1500);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const toggleTimer = () => {
@@ -73,7 +73,7 @@ function Pomodoro({ selectedTask }: Props): ReactElement {
           event.stopPropagation();
         }}
       >
-        {selectedTask && <Task task={selectedTask} />}
+        {selectedTask ? <Task task={selectedTask} /> : <div className="mt-5" />}
       </div>
     </div>
   );
