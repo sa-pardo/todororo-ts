@@ -2,6 +2,7 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { FiPause, FiPlay } from "react-icons/fi";
 import Task, { ITask } from "./Task";
 import TimerWorker from "../worker?worker";
+import styles from "./Pomodoro.module.css";
 
 const timerWorker = new TimerWorker();
 
@@ -47,18 +48,25 @@ function Pomodoro({ selectedTask }: Props): ReactElement {
       >
         {formatTime(time)}
       </p>
-      <div
-        onClick={() => toggleTimer()}
-        onKeyPress={() => toggleTimer()}
-        role="button"
-        tabIndex={0}
-        className="flex justify-center"
-      >
-        {isPlaying ? (
-          <FiPause className="text-yellow-300 cursor-pointer w-20 h-16 stroke-1" />
-        ) : (
-          <FiPlay className="text-green-500 cursor-pointer w-20 h-16 stroke-1" />
-        )}
+      <div className="flex justify-center">
+        <div
+          onClick={() => toggleTimer()}
+          onKeyPress={() => toggleTimer()}
+          role="button"
+          tabIndex={0}
+        >
+          {isPlaying ? (
+            <FiPause
+              key="pause"
+              className={`text-yellow-300 cursor-pointer w-20 h-16 stroke-1 ${styles["spin-one"]}`}
+            />
+          ) : (
+            <FiPlay
+              key="play"
+              className={`text-green-500 cursor-pointer w-20 h-16 stroke-1 ${styles["spin-one"]}`}
+            />
+          )}
+        </div>
       </div>
       <div
         onClickCapture={(event) => {
