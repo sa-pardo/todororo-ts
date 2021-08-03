@@ -12,6 +12,7 @@ const testTasks: ITask[] = [
 ];
 function App() {
   const [tasks, setTasks] = useState(testTasks);
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const mediaQuery = useMediaQuery("(min-width: 768px)");
 
   const toggleCompletedTask = (task: ITask): void => {
@@ -32,7 +33,7 @@ function App() {
   };
 
   const selectTask = (task: ITask) => {
-    console.log(task.title);
+    setSelectedTask(task);
   };
 
   return (
@@ -47,7 +48,7 @@ function App() {
         <div className="absolute left-0 top-0 h-screen w-full bg-[#e45858] z-[-10]" />
       )}
       <div className="w-full md:w-1/2 h-screen flex items-center justify-center">
-        <Pomodoro selectedTask={testTasks[0]} />
+        <Pomodoro selectedTask={selectedTask} />
       </div>
       <div className="w-full md:w-1/2 h-screen flex md:items-center justify-center pt-4">
         <TaskList
