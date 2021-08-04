@@ -1,13 +1,11 @@
 import React, { ReactElement } from "react";
+// eslint-disable-next-line import/no-cycle
 import Task, { ITask } from "./Task";
+// eslint-disable-next-line import/no-cycle
 import TaskInput from "./TaskInput";
 
 interface Props {
   tasks: ITask[];
-  toggleCompletedTask: (task: ITask) => void;
-  deleteTask: (task: ITask) => void;
-  selectTask: (task: ITask) => void;
-  addTask: (task: ITask) => void;
 }
 
 const compareByBooleans = (a: ITask, b: ITask) => {
@@ -20,25 +18,13 @@ const compareByBooleans = (a: ITask, b: ITask) => {
   return -1;
 };
 
-function TaskList({
-  tasks,
-  toggleCompletedTask,
-  deleteTask,
-  selectTask,
-  addTask,
-}: Props): ReactElement {
+function TaskList({ tasks }: Props): ReactElement {
   return (
     <div className="w-full md:max-w-[80%]">
       <h2 className="font-semibold text-3xl mb-4">To-Do List</h2>
-      <TaskInput addTask={addTask} />
+      <TaskInput />
       {tasks.sort(compareByBooleans).map((task) => (
-        <Task
-          task={task}
-          toggleCompletedTask={toggleCompletedTask}
-          deleteTask={deleteTask}
-          selectTask={selectTask}
-          key={task.title}
-        />
+        <Task task={task} key={task.id} />
       ))}
     </div>
   );

@@ -1,81 +1,105 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
+import { v4 as uuidv4 } from "uuid";
+// eslint-disable-next-line import/no-cycle
 import { ITask } from "./components/Task";
+// eslint-disable-next-line import/no-cycle
 import TaskList from "./components/TaskList";
 import rectangle from "./assets/Rectangle.png";
+// eslint-disable-next-line import/no-cycle
 import Pomodoro from "./components/Pomodoro";
 import useMediaQuery from "./hooks/MediaQuery";
+// eslint-disable-next-line import/no-cycle
+import ReducerContext from "./ReducerContext";
 
 const testTasks: ITask[] = [
-  { title: "this is just a sample task", isDone: false },
-  { title: "task2", isDone: true },
-  { title: "super tassk hardcoreeee lml 🔥", isDone: true },
+  { id: uuidv4(), title: "this is just a sample task", isDone: false },
+  { id: uuidv4(), title: "task2", isDone: true },
+  { id: uuidv4(), title: "super tassk hardcoreeee lml 🔥", isDone: true },
 ];
+
+export interface ReducerActions {
+  type: "toggle" | "add" | "delete" | "select";
+  task: ITask;
+}
+
+interface State {
+  tasks: ITask[];
+  selectedTask: ITask | null;
+}
+
+function reducer(state: State, action: ReducerActions): State {
+  switch (action.type) {
+    case "toggle":
+      return {
+        tasks: state.tasks.map((current) =>
+          current.id !== action.task.id
+            ? current
+            : { id: current.id, title: current.title, isDone: !current.isDone }
+        ),
+        selectedTask: state.selectedTask,
+      };
+    case "add":
+      return {
+        tasks: [action.task, ...state.tasks],
+        selectedTask: state.selectedTask,
+      };
+    case "delete":
+      return {
+        tasks: state.tasks.filter((current) => current.id !== action.task.id),
+        selectedTask: state.selectedTask,
+      };
+    case "select":
+      return { tasks: state.tasks, selectedTask: action.task };
+    default:
+      return state;
+  }
+}
+
+const initialState: State = {
+  tasks: testTasks,
+  selectedTask: null,
+};
+
 function App() {
-  const [tasks, setTasks] = useState(testTasks);
-  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const mediaQuery = useMediaQuery("(min-width: 768px)");
 
-  const toggleCompletedTask = (task: ITask): void => {
-    const updatedTasks = tasks.map((current) =>
-      current.title !== task.title
-        ? current
-        : { title: task.title, isDone: !task.isDone }
-    );
-    setTasks(updatedTasks);
-  };
-
-  const addTask = (task: ITask) => {
-    setTasks([task, ...tasks]);
-  };
-
-  const deleteTask = (task: ITask) => {
-    setTasks(tasks.filter((current) => current.title !== task.title));
-  };
-
-  const selectTask = (task: ITask) => {
-    setSelectedTask(task);
-  };
-
   return (
-    <div className="App h-screen w-screen md:flex justify-center items-center p-2">
-      {mediaQuery ? (
-        <img
-          src={rectangle}
-          alt="site background"
-          className="absolute left-0 top-0 h-screen w-[53vw] z-[-10]"
-        />
-      ) : (
-        <div className="absolute left-0 top-0 h-screen w-full bg-[#e45858] z-[-10]" />
-      )}
-      <div className="w-full md:w-1/2 h-screen flex items-center justify-center">
-        <Pomodoro selectedTask={selectedTask} />
-        {mediaQuery && (
-          <span className="text-white text-3xl font-extralight right-[52%] bottom-[1%] absolute">
-            Designed by
-          </span>
+    <ReducerContext.Provider value={dispatch}>
+      <div className="App h-screen w-screen md:flex justify-center items-center p-2">
+        {mediaQuery ? (
+          <img
+            src={rectangle}
+            alt="site background"
+            className="absolute left-0 top-0 h-screen w-[53vw] z-[-10]"
+          />
+        ) : (
+          <div className="absolute left-0 top-0 h-screen w-full bg-[#e45858] z-[-10]" />
         )}
-      </div>
-      <div className="w-full md:w-1/2 h-screen flex md:items-center justify-center pt-4">
-        <TaskList
-          tasks={tasks}
-          toggleCompletedTask={toggleCompletedTask}
-          deleteTask={deleteTask}
-          selectTask={selectTask}
-          addTask={addTask}
-        />
-        {mediaQuery && (
-          <span className="text-3xl font-extralight left-[51%] bottom-[1%] absolute">
-            Sebastian Pardo
-          </span>
-        )}
-      </div>
-      {!mediaQuery && (
-        <div className="w-full flex justify-center pt-4">
-          <span className="text-[#e45858] mr-2">Designed by</span>
-          Sebastian Pardo
+        <div className="w-full md:w-1/2 h-screen flex items-center justify-center">
+          <Pomodoro selectedTask={state.selectedTask} />
+          {mediaQuery && (
+            <span className="text-white text-3xl font-extralight right-[52%] bottom-[1%] absolute">
+              Designed by
+            </span>
+          )}
         </div>
-      )}
-    </div>
+        <div className="w-full md:w-1/2 h-screen flex md:items-center justify-center pt-4">
+          <TaskList tasks={state.tasks} />
+          {mediaQuery && (
+            <span className="text-3xl font-extralight left-[51%] bottom-[1%] absolute">
+              Sebastian Pardo
+            </span>
+          )}
+        </div>
+        {!mediaQuery && (
+          <div className="w-full flex justify-center pt-4">
+            <span className="text-[#e45858] mr-2">Designed by</span>
+            Sebastian Pardo
+          </div>
+        )}
+      </div>
+    </ReducerContext.Provider>
   );
 }
 

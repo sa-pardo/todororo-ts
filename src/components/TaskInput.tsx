@@ -1,23 +1,28 @@
-import React, { FormEvent, ReactElement, useState } from "react";
+import React, { FormEvent, ReactElement, useContext, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { FiCircle, FiPlus } from "react-icons/fi";
+// eslint-disable-next-line import/no-cycle
+import ReducerContext from "../ReducerContext";
+// eslint-disable-next-line import/no-cycle
 import { ITask } from "./Task";
 import styles from "./TaskInput.module.css";
-
-interface Props {
-  addTask: (task: ITask) => void;
-}
 
 interface FormElement extends HTMLFormElement {
   task: HTMLInputElement;
 }
 
-function TaskInput({ addTask }: Props): ReactElement {
+function TaskInput(): ReactElement {
+  const dispatch = useContext(ReducerContext);
   const [isFocused, setIsFocused] = useState(false);
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const taskTarget: FormElement = e.target as FormElement;
-    const task: ITask = { title: taskTarget.task.value, isDone: false };
-    addTask(task);
+    const task: ITask = {
+      id: uuidv4(),
+      title: taskTarget.task.value,
+      isDone: false,
+    };
+    dispatch({ type: "add", task });
     taskTarget.task.value = "";
   };
   return (

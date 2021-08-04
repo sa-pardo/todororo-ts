@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { FiPause, FiPlay } from "react-icons/fi";
+// eslint-disable-next-line import/no-cycle
 import Task, { ITask } from "./Task";
 import TimerWorker from "../worker?worker";
 import styles from "./Pomodoro.module.css";
@@ -73,7 +74,11 @@ function Pomodoro({ selectedTask }: Props): ReactElement {
           event.stopPropagation();
         }}
       >
-        {selectedTask ? <Task task={selectedTask} /> : <div className="mt-5" />}
+        {selectedTask ? (
+          <Task task={selectedTask} readOnly />
+        ) : (
+          <div className="mt-5" />
+        )}
       </div>
     </div>
   );
