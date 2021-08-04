@@ -1,12 +1,12 @@
-const module = "";
-export default module;
+export {};
 
 const timer = (time: number): number => {
   const start: number = Date.now();
   return setInterval(() => {
     const dt: number = Date.now() - start;
     const aux: number = Number((dt / 1000).toFixed(0));
-    postMessage(time - aux);
+    // eslint-disable-next-line no-restricted-globals
+    (self as unknown as Worker).postMessage(time - aux);
   }, 100);
 };
 
