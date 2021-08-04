@@ -2,6 +2,7 @@
   "name": "tododoro-ts",
   "version": "1.0.0",
   "scripts": {
+    "start": "node server.js",
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
@@ -12,6 +13,7 @@
     "node": "16.x"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-icons": "^4.2.0",
