@@ -8,6 +8,9 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "tsc": "tsc"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
