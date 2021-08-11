@@ -24,7 +24,7 @@ function CircleCheck({ readOnly, task }: CircleCheckProps): ReactElement {
       <div className="relative flex cursor-pointer">
         <FiCircle className="circle stroke-1 w-8 h-8 text-gray-500" />
         <BiCheck
-          className={`w-6 h-6 absolute top-1 left-1 stroke-1 ${
+          className={`w-6 h-6 absolute top-1 left-1 stroke-1 text-blue-500 ${
             task.isDone ? "block" : "hidden"
           }`}
         />
@@ -68,7 +68,7 @@ function TaskTitle({ readOnly, task }: TaskTitleProps): ReactElement {
     return (
       <div className="overflow-hidden">
         <p
-          key={task.isDone.toString()}
+          key={task.title + task.isDone.toString()}
           className={`mx-2 relative cursor-pointer truncate ${
             task.isDone ? styles["text-strike"] : styles["text-unstrike"]
           }`}
@@ -87,7 +87,7 @@ function TaskTitle({ readOnly, task }: TaskTitleProps): ReactElement {
       className="overflow-hidden"
     >
       <p
-        key={task.isDone.toString()}
+        key={task.title + task.isDone.toString()}
         className={`mx-2 relative cursor-pointer truncate ${
           task.isDone ? styles["text-strike"] : styles["text-unstrike"]
         }`}
