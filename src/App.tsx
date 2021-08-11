@@ -29,15 +29,18 @@ interface State {
 
 function reducer(state: State, action: ReducerActions): State {
   switch (action.type) {
-    case "toggle":
-      return {
+    case "toggle": {
+      const aux: ITask = { ...action.task, isDone: !action.task.isDone };
+      const newState = {
         tasks: state.tasks.map((current) =>
-          current.id !== action.task.id
-            ? current
-            : { id: current.id, title: current.title, isDone: !current.isDone }
+          current.id !== action.task.id ? current : aux
         ),
-        selectedTask: state.selectedTask,
+        selectedTask:
+          state.selectedTask?.id !== action.task.id ? state.selectedTask : aux,
       };
+      newState.tasks.sort((a: ITask, b: ITask) => +a.isDone - +b.isDone);
+      return newState;
+    }
     case "add":
       return {
         tasks: [action.task, ...state.tasks],
@@ -46,7 +49,8 @@ function reducer(state: State, action: ReducerActions): State {
     case "delete":
       return {
         tasks: state.tasks.filter((current) => current.id !== action.task.id),
-        selectedTask: state.selectedTask,
+        selectedTask:
+          state.selectedTask?.id !== action.task.id ? state.selectedTask : null,
       };
     case "select":
       return { tasks: state.tasks, selectedTask: action.task };
