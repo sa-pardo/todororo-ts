@@ -1,14 +1,27 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { ReactElement, useEffect, useReducer } from "react";
 import { FiPause, FiPlay } from "react-icons/fi";
 // eslint-disable-next-line import/no-cycle
 import Task, { ITask } from "./Task";
 import TimerWorker from "../worker?worker";
 import styles from "./Pomodoro.module.css";
+import notificationSound from "../assets/notification.wav";
+import icon from "../assets/favicon.ico";
 
 const timerWorker = new TimerWorker();
 
 interface Props {
   selectedTask: ITask | null;
+}
+
+interface State {
+  time: number;
+  type: "work" | "break";
+  isPlaying: boolean;
+}
+
+interface Action {
+  type: "set" | "toggle" | "switch";
+  data?: number;
 }
 
 const formatTime = (time: number): string => {
@@ -20,34 +33,102 @@ const formatTime = (time: number): string => {
   return `${minutes}:${seconds}`;
 };
 
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "set":
+      return { ...state, time: action.data! };
+    case "toggle":
+      return { ...state, isPlaying: !state.isPlaying };
+    case "switch": {
+      if (state.type === "work") {
+        return { time: 2, type: "break", isPlaying: false };
+      }
+      return { time: 1, type: "work", isPlaying: false };
+    }
+    default:
+      return state;
+  }
+}
+
+const initialState: State = {
+  time: 1,
+  type: "work",
+  isPlaying: false,
+};
+
+function notifyEndedSession(sessionType: "work" | "break") {
+  // eslint-disable-next-line no-new
+  new Notification("Tododoro", {
+    body: `Your ${sessionType} session has ended`,
+    icon,
+    tag: "waeonao",
+    silent: true,
+  });
+  const audio = document.getElementById("notification") as HTMLMediaElement;
+  audio.play();
+  audio.addEventListener(
+    "ended",
+    () => {
+      audio.currentTime = 0;
+      audio.play();
+    },
+    { once: true }
+  );
+}
+
 function Pomodoro({ selectedTask }: Props): ReactElement {
-  const [time, setTime] = useState(1500);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const toggleTimer = () => {
-    if (isPlaying) {
-      setIsPlaying(!isPlaying);
+    dispatch({ type: "toggle" });
+    if (state.isPlaying) {
       timerWorker.postMessage({ type: "stop" });
     } else {
-      setIsPlaying(!isPlaying);
-      timerWorker.postMessage({ type: "start", time });
+      timerWorker.postMessage({ type: "start", time: state.time });
     }
   };
 
   useEffect(() => {
     timerWorker.onmessage = (message) => {
-      setTime(message.data);
+      if (message.data !== 0) {
+        dispatch({ type: "set", data: message.data });
+      } else {
+        dispatch({ type: "set", data: 0 });
+        timerWorker.postMessage({ type: "stop" });
+      }
     };
   }, []);
 
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
+  useEffect(() => {
+    if (state.time !== 0) {
+      if (state.isPlaying) {
+        document.title = `${formatTime(state.time)} Tododoro`;
+      }
+    } else {
+      document.title = "Tododoro";
+      notifyEndedSession(state.type);
+      setTimeout(() => {
+        dispatch({ type: "switch" });
+      }, 1000);
+    }
+  }, [state.time, state.type, state.isPlaying]);
+
   return (
     <div className="border-white border rounded-3xl p-8 w-full max-w-md">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio id="notification">
+        <source src={notificationSound} />
+      </audio>
       <h2 className="font-semibold text-3xl text-white mb-5">Pomodoro</h2>
       <p
         className="mb-5 text-white text-9xl text-center underline font-thin "
         style={{ textDecorationThickness: 4, textUnderlineOffset: 5 }}
       >
-        {formatTime(time)}
+        {formatTime(state.time)}
       </p>
       <div className="flex justify-center">
         <div
@@ -56,7 +137,7 @@ function Pomodoro({ selectedTask }: Props): ReactElement {
           role="button"
           tabIndex={0}
         >
-          {isPlaying ? (
+          {state.isPlaying ? (
             <FiPause
               key="pause"
               className={`text-yellow-300 cursor-pointer w-20 h-16 stroke-1 ${styles["spin-one"]}`}
