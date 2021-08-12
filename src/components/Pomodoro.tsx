@@ -41,9 +41,9 @@ function reducer(state: State, action: Action): State {
       return { ...state, isPlaying: !state.isPlaying };
     case "switch": {
       if (state.type === "work") {
-        return { time: 2, type: "break", isPlaying: false };
+        return { time: 300, type: "break", isPlaying: false };
       }
-      return { time: 1, type: "work", isPlaying: false };
+      return { time: 1500, type: "work", isPlaying: false };
     }
     default:
       return state;
@@ -51,7 +51,7 @@ function reducer(state: State, action: Action): State {
 }
 
 const initialState: State = {
-  time: 1,
+  time: 1500,
   type: "work",
   isPlaying: false,
 };
