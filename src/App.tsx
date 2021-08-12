@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { FaGithub } from "react-icons/fa";
 // eslint-disable-next-line import/no-cycle
 import { ITask } from "./components/Task";
 // eslint-disable-next-line import/no-cycle
@@ -70,6 +71,14 @@ function App() {
 
   return (
     <ReducerContext.Provider value={dispatch}>
+      <a
+        href="https://github.com/sa-pardo/todororo-ts"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="absolute right-4 top-4"
+      >
+        <FaGithub className="w-7 h-7 text-gray-600 hover:text-black" />
+      </a>
       <div className="App h-screen w-screen md:flex justify-center items-center p-2">
         {mediaQuery ? (
           <img
