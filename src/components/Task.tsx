@@ -2,14 +2,8 @@ import React, { ReactElement, useContext, useState } from "react";
 import { FiCircle, FiTrash } from "react-icons/fi";
 import { BiCheck } from "react-icons/bi";
 import styles from "./Task.module.css";
-// eslint-disable-next-line import/no-cycle
-import ReducerContext from "../ReducerContext";
-
-export interface ITask {
-  id: string;
-  title: string;
-  isDone: boolean;
-}
+import ReducerContext from "../context/ReducerContext";
+import { ITask } from "../state";
 
 interface CircleCheckProps {
   readOnly: boolean;

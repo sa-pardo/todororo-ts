@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
-// eslint-disable-next-line import/no-cycle
-import Task, { ITask } from "./Task";
-// eslint-disable-next-line import/no-cycle
+import { ITask } from "../state";
+import Task from "./Task";
 import TaskInput from "./TaskInput";
 
 interface Props {
