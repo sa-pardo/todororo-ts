@@ -1,72 +1,20 @@
 import React, { useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { FaGithub } from "react-icons/fa";
-// eslint-disable-next-line import/no-cycle
-import { ITask } from "./components/Task";
-// eslint-disable-next-line import/no-cycle
 import TaskList from "./components/TaskList";
-import rectangle from "./assets/Rectangle.png";
-// eslint-disable-next-line import/no-cycle
 import Pomodoro from "./components/Pomodoro";
+import rectangle from "./assets/Rectangle.png";
 import useMediaQuery from "./hooks/MediaQuery";
-// eslint-disable-next-line import/no-cycle
-import ReducerContext from "./ReducerContext";
+import ReducerContext from "./context/ReducerContext";
+import { AppState } from "./state";
+import tasksReducer from "./reducers/tasksReducer";
 
-const testTasks: ITask[] = [
-  { id: uuidv4(), title: "this is just a sample task", isDone: false },
-  { id: uuidv4(), title: "task2", isDone: true },
-  { id: uuidv4(), title: "super tassk hardcoreeee lml 🔥", isDone: true },
-];
-
-export interface ReducerActions {
-  type: "toggle" | "add" | "delete" | "select";
-  task: ITask;
-}
-
-interface State {
-  tasks: ITask[];
-  selectedTask: ITask | null;
-}
-
-function reducer(state: State, action: ReducerActions): State {
-  switch (action.type) {
-    case "toggle": {
-      const aux: ITask = { ...action.task, isDone: !action.task.isDone };
-      const newState = {
-        tasks: state.tasks.map((current) =>
-          current.id !== action.task.id ? current : aux
-        ),
-        selectedTask:
-          state.selectedTask?.id !== action.task.id ? state.selectedTask : aux,
-      };
-      newState.tasks.sort((a: ITask, b: ITask) => +a.isDone - +b.isDone);
-      return newState;
-    }
-    case "add":
-      return {
-        tasks: [action.task, ...state.tasks],
-        selectedTask: state.selectedTask,
-      };
-    case "delete":
-      return {
-        tasks: state.tasks.filter((current) => current.id !== action.task.id),
-        selectedTask:
-          state.selectedTask?.id !== action.task.id ? state.selectedTask : null,
-      };
-    case "select":
-      return { tasks: state.tasks, selectedTask: action.task };
-    default:
-      return state;
-  }
-}
-
-const initialState: State = {
-  tasks: testTasks,
+const initialState: AppState = {
+  tasks: [],
   selectedTask: null,
 };
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(tasksReducer, initialState);
   const mediaQuery = useMediaQuery("(min-width: 768px)");
 
   return (

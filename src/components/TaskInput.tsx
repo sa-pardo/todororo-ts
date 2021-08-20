@@ -1,11 +1,9 @@
 import React, { FormEvent, ReactElement, useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FiCircle, FiPlus } from "react-icons/fi";
-// eslint-disable-next-line import/no-cycle
-import ReducerContext from "../ReducerContext";
-// eslint-disable-next-line import/no-cycle
-import { ITask } from "./Task";
+import ReducerContext from "../context/ReducerContext";
 import styles from "./TaskInput.module.css";
+import { ITask } from "../state";
 
 interface FormElement extends HTMLFormElement {
   task: HTMLInputElement;

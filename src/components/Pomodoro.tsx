@@ -1,27 +1,17 @@
 import React, { ReactElement, useEffect, useReducer } from "react";
 import { FiPause, FiPlay } from "react-icons/fi";
-// eslint-disable-next-line import/no-cycle
-import Task, { ITask } from "./Task";
+import Task from "./Task";
 import TimerWorker from "../worker?worker";
 import styles from "./Pomodoro.module.css";
 import notificationSound from "../assets/notification.wav";
 import icon from "../assets/favicon.ico";
+import { ITask, PomodoroState } from "../state";
+import pomodoroReducer from "../reducers/pomodoroReducer";
 
 const timerWorker = new TimerWorker();
 
 interface Props {
   selectedTask: ITask | null;
-}
-
-interface State {
-  time: number;
-  type: "work" | "break";
-  isPlaying: boolean;
-}
-
-interface Action {
-  type: "set" | "toggle" | "switch";
-  data?: number;
 }
 
 const formatTime = (time: number): string => {
@@ -33,24 +23,7 @@ const formatTime = (time: number): string => {
   return `${minutes}:${seconds}`;
 };
 
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case "set":
-      return { ...state, time: action.data! };
-    case "toggle":
-      return { ...state, isPlaying: !state.isPlaying };
-    case "switch": {
-      if (state.type === "work") {
-        return { time: 300, type: "break", isPlaying: false };
-      }
-      return { time: 1500, type: "work", isPlaying: false };
-    }
-    default:
-      return state;
-  }
-}
-
-const initialState: State = {
+const initialState: PomodoroState = {
   time: 1500,
   type: "work",
   isPlaying: false,
@@ -77,7 +50,7 @@ function notifyEndedSession(sessionType: "work" | "break") {
 }
 
 function Pomodoro({ selectedTask }: Props): ReactElement {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(pomodoroReducer, initialState);
 
   const toggleTimer = () => {
     dispatch({ type: "toggle" });
