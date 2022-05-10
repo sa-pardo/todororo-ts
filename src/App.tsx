@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { FaGithub } from "react-icons/fa";
 import TaskList from "./components/TaskList";
 import Pomodoro from "./components/Pomodoro";
@@ -8,14 +8,21 @@ import ReducerContext from "./context/ReducerContext";
 import { AppState } from "./state";
 import tasksReducer from "./reducers/tasksReducer";
 
-const initialState: AppState = {
-  tasks: [],
-  selectedTask: null,
-};
+const stored = localStorage.getItem("state");
+const initialState: AppState = stored
+  ? JSON.parse(stored)
+  : {
+      tasks: [],
+      selectedTask: null,
+    };
 
 function App() {
   const [state, dispatch] = useReducer(tasksReducer, initialState);
   const mediaQuery = useMediaQuery("(min-width: 768px)");
+
+  useEffect(() => {
+    localStorage.setItem("state", JSON.stringify(state));
+  }, [state]);
 
   return (
     <ReducerContext.Provider value={dispatch}>

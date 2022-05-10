@@ -15,7 +15,7 @@ function CircleCheck({ readOnly, task }: CircleCheckProps): ReactElement {
   const dispatch = useContext(ReducerContext);
   if (readOnly) {
     return (
-      <div className="relative flex cursor-pointer">
+      <div className="relative flex">
         <FiCircle className="circle stroke-1 w-8 h-8 text-gray-500" />
         <BiCheck
           className={`w-6 h-6 absolute top-1 left-1 stroke-1 text-blue-500 ${
@@ -63,7 +63,7 @@ function TaskTitle({ readOnly, task }: TaskTitleProps): ReactElement {
       <div className="overflow-hidden">
         <p
           key={task.title + task.isDone.toString()}
-          className={`mx-2 relative cursor-pointer truncate ${
+          className={`mx-2 relative truncate ${
             task.isDone ? styles["text-strike"] : styles["text-unstrike"]
           }`}
         >
